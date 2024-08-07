@@ -10,6 +10,8 @@ Aplikasi display masjid digunakan sebagai media informasi pada masjid dan mushol
 
 Jam masjid menggunakan json sebagai database. Cukup Ekstrak kode di webroot. Aplikasi akan langsung berjalan.
 
+* Install xampp.
+* clone repositori ke dalam webroot atau htdocs  
 * Akses / untuk halaman admin
 * Akses /display untuk halaman jam masjid
 
