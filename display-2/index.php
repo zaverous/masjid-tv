@@ -158,6 +158,18 @@ foreach ($files as $v) {
 			<!-- </div> -->
 		</div>
 	</div>
+	<div id="countdown">
+		<div class="coloumn">
+			<div class="counter">
+				<div class="h1">COUNTER</div>
+				<div><span> : </span></div>
+				<div class="hhiiss">00:00:00</div>
+			</div>	
+			<div class="counter">
+				<div class="hhiiss">00:00:00</div>
+			</div>	
+		</div>
+	</div>
 
 	<div id="bottom-container">
 		<div id="jadwal"></div>
@@ -251,6 +263,7 @@ foreach ($files as $v) {
 				}
 				app.showJadwal();
 				app.displaySchedule();
+				app.countDownNextPray();
 				// app.showCountDownNextPray();
 				// app.runRightCountDown(app.dhuhr,'Fajr');
 
@@ -402,9 +415,7 @@ foreach ($files as $v) {
 					$('#right-counter .counter>.hh').html(t.hours + '<span>' + app.db.timeName.Hours + '</span>');
 					$('#right-counter .counter>.ii').html(t.minutes + '<span>' + app.db.timeName.Minutes + '</span>');
 					$('#right-counter .counter>.ss').html(t.seconds + '<span>' + app.db.timeName.Seconds + '</span>');
-
-					$('#right-counter').slideDown();
-					$('#quote').hide();
+					$('#countdown .counter>.hhiiss').html(app.db.prayName[nextPray.pray] +":"+ t.hours + ":" + t.minutes + ":" + t.seconds);
 
 					app.nextPrayCount++;
 					if (app.nextPrayCount >= 30) { // 30 detik show counter
@@ -416,6 +427,28 @@ foreach ($files as $v) {
 					}
 				}, 1000);
 			},
+			countDownNextPray: function() {
+				// $('#right-counter').html();
+				let nextPray = app.getNextPray();
+				if (app.countDownTimer) return; //timer masih jalan
+				app.nextPrayCount = 0;
+				//console.log(moment(nextPray['date']).format('YYYY-MM-DD HH:mm:ss'));
+				app.countDownTimer = setInterval(function() {
+					let t = app.countDownCalculate(nextPray.date);
+					$('#countdown .counter>.h1').html(app.db.prayName[nextPray.pray] );
+					// $('#countdown .counter>.hh').html(t.hours + '<span>' + app.db.timeName.Hours + '</span>');
+					// $('#countdown .counter>.ii').html(t.minutes + '<span>' + app.db.timeName.Minutes + '</span>');
+					// $('#countdown .counter>.ss').html(t.seconds + '<span>' + app.db.timeName.Seconds + '</span>');
+					$('#countdown .counter>.hhiiss').html(t.hours + ":" + t.minutes + ":" + t.seconds);
+
+					$('#countdown').slideDown();
+					$('#quote').hide();
+
+					app.nextPrayCount++;
+
+				}, 1000);
+			},
+			
 			showDisplayAdzan: function(prayName) {
 				if (!app.adzanTimer) {
 					prayName = (prayName == 'sunrise') ? 'Waktu Syuruq' : prayName;

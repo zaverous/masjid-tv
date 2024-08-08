@@ -342,8 +342,8 @@ Image credits: unsplash.com
 	line-height: 0.8;
 	/* background:#F00; */
 	text-align: right;
-	margin:2vw 0 0 0;
-	padding:0 4vw 0 0;
+	margin:1vw 1vw 0 0;
+	padding:0 2vw 0 0;
 	/* font-family: 'OpenSansCondLight', Impact,'Times New Roman', Helvetica, Arial, sans-serif;  */
 	font-weight:bold;
 	color:#FFF;
@@ -369,24 +369,24 @@ Image credits: unsplash.com
 	/* background-color:var(--main-bg-color); */
 	/* background-color:#33cccc; */
 	font-size:2vw;
-	margin: 0.8vh auto auto auto;
+	margin: 0.8vw 1vw 1vw auto;
+	padding:0 0 0 3vw;
 	font-weight:bold;
 	position:relative;
 }
-#tanggal:after{
+/* #tanggal:after{
 	display: block;
 	content: "";
 	position:absolute;
 	height:6vw;
 	width:20vw;
-	bottom: -5.8vw;
-	right:3vw;
+	bottom: 5.8vw;
 	/* background-color:#e2ad0055; */
 	/* background-image: url(../img/clock-line.png); */
-	background-size: contain;
-	background-position: center center;
-	background-repeat: no-repeat;
-}
+	/* background-size: contain; */
+	/* background-position: center center; */
+	/* background-repeat: no-repeat; */
+/* } */ 
 #info-masjid .header1{
 	color:#FFF;
 	/* background-color:var(--main-bg-color); */
@@ -401,13 +401,49 @@ Image credits: unsplash.com
 	color:#FFF;
 	/* background-color:var(--main-bg-color); */
 	/* background-color:#33cccc; */
-	font-size:20px;
+	font-size:1.2vw;
 	margin: 0.8vh auto auto auto;
 	font-weight:bold;
 	position:relative;
 	text-align: center;
 }
+/* Clear floats after the columns */
+.countdown:after {
+  content: "";
+  display: table;
+  clear: both;
+}
 
+#countdown{
+	height: 6vw;
+	width: 100vw;
+	background-color:#fff;
+	background: rgba(133, 133, 133,0.5);
+	/* box-shadow: 0 0 10vw 0vw rgba(0,0,0,0.7); */
+	/* background-image: url(../img/bg-pattern-01.png); */
+    display: block;
+	content: "";
+	position: absolute;
+	right:0;
+	bottom: 18vw;
+	left:0;
+}
+
+#countdown .counter {
+    color: #fff;
+	float:left;						/* column that will fit 5 columns container*/
+	width: 50%;
+	padding: 0 3vw;
+    text-align: center;
+    text-transform: uppercase;
+	font-family: 'OpenSansCondLight', Helvetica, Arial, sans-serif;
+	white-space: nowrap;
+    overflow: hidden;
+}
+
+#countdown .counter div{
+	display: inline-block;
+}
 
 /* Clear floats after the columns */
 .bottom-container:after {
@@ -421,14 +457,13 @@ Image credits: unsplash.com
 	width: 100vw;
 	background-color:#fff;
 	background:linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 40%, rgba(0,0,0,0.7) 100%);
-	box-shadow: 0 0 20vw 20vw rgba(0,0,0,0.7);
+	box-shadow: 0 0 10vw 0vw rgba(0,0,0,0.7);
 	/* background-image: url(../img/bg-pattern-01.png); */
     display: block;
 	content: "";
-	position:absolute;
-	top: 35vw;
+	position: absolute;
 	right:0;
-	bottom:0;
+	bottom: 6vw;
 	left:0;
 }
 
@@ -528,7 +563,7 @@ Image credits: unsplash.com
 	top:0;
 	right:0;
 	bottom:0;
-	left:26vw;
+	left:0;
 }
 #right-counter .counter {
     color: #fff;
@@ -555,6 +590,7 @@ Image credits: unsplash.com
 	border: 0.3vh solid #33cccc;
 	border-radius: 1vh;
 }
+
 #right-counter .counter>div{
     display: inline-block;
 	width:15vw;
