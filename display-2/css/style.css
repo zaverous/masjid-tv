@@ -454,7 +454,7 @@ Image credits: unsplash.com
     text-transform: uppercase;
 	font-size:4vw;
 	font-weight:bold;
-	font-family: 'Titillium Web', Helvetica, Arial, sans-serif;  
+	font-family:  Helvetica, Arial, sans-serif;  
 	white-space: nowrap;
     overflow: hidden;
 	position: relative;
@@ -501,8 +501,8 @@ Image credits: unsplash.com
 	font-weight:bold;
 }
 #jadwal .col .row-xs-5{           /* removed the padding for both xs-5 and xs-7*/
-	font-size:4vw;
-	font-family: 'OpenSansCondLight', Helvetica, Arial, sans-serif; 
+	font-size:3.5vw;
+	font-family: 'Titillium Web','OpenSansCondLight', Helvetica, Arial, sans-serif; 
 	position:relative;
 	text-align:center;
 }
