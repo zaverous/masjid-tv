@@ -119,7 +119,33 @@ foreach ($files as $v) {
 			<div id="jam"></div>
 		</div>
 	</div>
-
+	<div id="right-container">
+		<div id="quote">
+			<div class="carousel quote-carousel slide" data-ride="carousel" data-interval="<?= $info_timer ?>" data-pause="null">
+				<div class="carousel-inner">
+					<?php
+					$i = 0;
+					foreach ($db['info'] as $k => $v) {
+						if ($v[3]) {
+							echo '
+						<div class="item slides ' . ($i == 0 ? 'active' : '') . '">
+						  <div class="hero">        
+							<hgroup>
+								<div class="text1">' . htmlentities($v[0]) . '</div>        
+								<div class="text2">' . nl2br(htmlentities($v[1])) . '</div>        
+								<div class="text3">' . htmlentities($v[2]) . '</div>
+							</hgroup>
+						  </div>
+						</div>
+						';
+							$i++;
+						}
+					}
+					?>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div id="right-counter" style="display:none">
 		<div class="counter">
 			<h1>COUNTER</h1>
@@ -237,13 +263,13 @@ foreach ($files as $v) {
 					app.cekPerDetik()
 				}, 1000);
 				$('#preloader').delay(350).fadeOut('slow');
-				console.log(app.db);
-				let testTime	= moment().add(8,'seconds');
-				app.runRightCountDown(testTime,'Menuju Syuruq');
-				app.runFullCountDown(testTime,'iqomah',true);
-				app.runFullCountDown(testTime,'TEST COUNTER',false);
-				//app.showDisplayAdzan('sunrise');
-				//app.showDisplayKhutbah();
+				// console.log(app.db);
+				// let testTime	= moment().add(8,'seconds');
+				// app.runRightCountDown(testTime,'Menuju Syuruq');
+				// app.runFullCountDown(testTime,'iqomah',true);
+				// app.runFullCountDown(testTime,'TEST COUNTER',false);
+				// app.showDisplayAdzan('sunrise');
+				// app.showDisplayKhutbah();
 			},
 			cekPerDetik: function() {
 				if (!app.tglHariIni || moment().format('YYYY-MM-DD') != moment(app.tglHariIni).format('YYYY-MM-DD')) {
@@ -414,13 +440,15 @@ foreach ($files as $v) {
 					$('#right-counter .counter>.ss').html(t.seconds + '<span>' + app.db.timeName.Seconds + '</span>');
 
 					$('#right-counter').slideDown();
-					$('#countdown').hide();         // removing the countdown row so it would not cover the countdown to adzan
+					$('#quote').hide();        
+					$('#countdown').hide();         // removing the countdown row so it would not cover the countdown 
 
 					app.nextPrayCount++;
 					if (app.nextPrayCount >= 30) { // 30 detik show counter
 						clearInterval(app.countDownTimer);
 						app.countDownTimer = false;
 						$('#right-counter').fadeOut();
+						$('#quote').fadeIn();          
 						$('#countdown').fadeIn();      // putting it back after the timer ended
 						// document.getElementById("demo").innerHTML = "EXPIRED";
 					}
@@ -431,6 +459,7 @@ foreach ($files as $v) {
 				let nextPray = app.getNextPray();
 				if (app.countDownTimer) return; //timer masih jalan
 				app.nextPrayCount = 0;
+				//console.log(moment(nextPray['date']).format('YYYY-MM-DD HH:mm:ss'));
 				app.countDownTimer = setInterval(function() {
 					let t = app.countDownCalculate(nextPray.date);
 					$('#countdown .counter>.h1').html(app.db.prayName[nextPray.pray] );
@@ -442,7 +471,13 @@ foreach ($files as $v) {
 					$('#countdown').slideDown();
 
 					app.nextPrayCount++;
-
+					if (app.nextPrayCount >= 30) { // 30 detik show counter
+						clearInterval(app.countDownTimer);
+						app.countDownTimer = false;
+						// $('#quote').fadeIn();          
+						// $('#countdown').fadeIn();      // putting it back after the timer ended
+						// document.getElementById("demo").innerHTML = "EXPIRED";
+					}
 				}, 1000);
 			},
 			
@@ -524,11 +559,13 @@ foreach ($files as $v) {
 					$('#right-counter .counter>.ii').html(t.minutes + '<span>' + app.db.timeName.Minutes + '</span>');
 					$('#right-counter .counter>.ss').html(t.seconds + '<span>' + app.db.timeName.Seconds + '</span>');
 					$('#right-counter').slideDown();
+					$('#quote').hide();        
 					$('#countdown').hide();         // removing the countdown row so it would not cover the countdown to adzan
 
 					if (t.distance < 1) {
 						clearInterval(app.countDownTimer);
 						app.countDownTimer = false;
+						$('#quote').fadeIn();          
 						$('#right-counter').fadeOut();
 						$('#countdown').fadeIn();  // putting it back after the timer ended
 						// document.getElementById("demo").innerHTML = "EXPIRED";

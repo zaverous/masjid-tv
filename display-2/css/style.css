@@ -355,7 +355,7 @@ Image credits: unsplash.com
 	text-align: right;
 	margin:1vw 1vw 0 0;
 	padding:0 2vw 0 0;
-	/* font-family: 'OpenSansCondLight', Impact,'Times New Roman', Helvetica, Arial, sans-serif;  */
+	font-family:  Helvetica,'Times New Roman', Arial, Impact, sans-serif; 
 	font-weight:bold;
 	color:#FFF;
 	position:relative;
@@ -370,7 +370,7 @@ Image credits: unsplash.com
 	width:4vw;
 	font-size:3vw;
 	font-weight:bold;
-	font-family: 'Titillium Web', Helvetica, Arial, sans-serif;  
+	/* font-family: 'Titillium Web', Helvetica, Arial, sans-serif;   */
 	border-left: 0.7px solid rgba(255,255,255,0.6);
 	/* padding-left: 1.1vw; */
 }
@@ -432,7 +432,7 @@ Image credits: unsplash.com
 }
 
 #countdown{
-	height: 5vw;
+	height: 6vw;
 	width: 100vw;
 	background-color:rgba(51,204,204,0.2);
 	/* background: rgba(133, 133, 133,0.5); */
@@ -452,19 +452,18 @@ Image credits: unsplash.com
 	width: 50%;				/* column that will fit 2 columns container*/
     text-align: center;
     text-transform: uppercase;
-	font-size:3vw;
+	font-size:4vw;
 	font-weight:bold;
 	font-family: 'Titillium Web', Helvetica, Arial, sans-serif;  
 	white-space: nowrap;
     overflow: hidden;
-	margin: 0.5vh auto auto auto;
 	position: relative;
 }
 
  
 #countdown .counter .h1{
 	color:#f4961b;
-	font-size:3vw;
+	font-size:4vw;
 	font-weight:bold;
 	font-family: 'Titillium Web', Helvetica, Arial, sans-serif;  
 }
@@ -502,13 +501,16 @@ Image credits: unsplash.com
 	font-weight:bold;
 }
 #jadwal .col .row-xs-5{           /* removed the padding for both xs-5 and xs-7*/
-	font-size:3vw;
+	font-size:4vw;
+	font-family: 'OpenSansCondLight', Helvetica, Arial, sans-serif; 
 	position:relative;
 	text-align:center;
 }
 #jadwal .col .row-xs-7{
-	font-size:3vw;
+	font-size:4vw;
 	/* line-height:4vh; */
+	margin-top: -1vw;
+	font-family:  Helvetica, Arial, sans-serif; 
 	font-weight:bold;
 	text-align:center;
 	color:#FFFFFF;
@@ -641,14 +643,14 @@ Image credits: unsplash.com
 
 
 
-/* #right-container{ */
-	/* position:fixed; */
-	/* top:0; */
-	/* right:0; */
-	/* bottom:0; */
-	/* left:0; */
-	/* background-color:rgba(255,0,0,0.3) */
-/* } */
+#right-container{
+	position:fixed;
+	top:-2vw;
+	right:0;
+	bottom:0;
+	left:0;
+	/* background-color:rgba(0,0,0,0.3) */
+}
 #running-text:before{
 	display: block;
 	content: "";
@@ -753,7 +755,7 @@ Image credits: unsplash.com
     color: #fff;
     position: absolute;
     top: 40%;
-    left: 20%;
+	left: 50%;
 	transform: translate(-50%,-50%);
     /* z-index: 3; */
     color: #fff;
