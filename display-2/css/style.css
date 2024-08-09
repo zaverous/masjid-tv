@@ -311,7 +311,8 @@ Image credits: unsplash.com
 .main{
 	
 }
-
+/*                HEADER                 */
+/* Baris header berisi 3 coloumn, berisi #tanggal, #info-masjid, #jam*/
 #header{
 	position:fixed;
 	top:0;
@@ -336,6 +337,16 @@ Image credits: unsplash.com
 	opacity:0.6;
 }
 
+/* Clear floats after the columns */
+.header:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+.column {
+  float: left;
+  width: 33.33%;
+}
 #jam{
 	font-size:6vw;
 	/* height:90px; */
@@ -388,12 +399,13 @@ Image credits: unsplash.com
 	/* background-repeat: no-repeat; */
 /* } */ 
 #info-masjid .header1{
-	color:#FFF;
+	color:#f4961b;
 	/* background-color:var(--main-bg-color); */
 	/* background-color:#33cccc; */
-	font-size:2vw;
+	font-size:3vw;
 	margin: 0.8vh auto auto auto;
 	font-weight:bold;
+	font-family: 'Titillium Web', Helvetica, Arial, sans-serif;  
 	position:relative;
 	text-align: center;
 }
@@ -401,12 +413,17 @@ Image credits: unsplash.com
 	color:#FFF;
 	/* background-color:var(--main-bg-color); */
 	/* background-color:#33cccc; */
-	font-size:1.2vw;
+	font-size:1.5vw;
 	margin: 0.8vh auto auto auto;
 	font-weight:bold;
+	font-family: 'Titillium Web', Helvetica, Arial, sans-serif;  
 	position:relative;
 	text-align: center;
 }
+
+
+/* Baris countdown ke jadwal sholat selanjutnya */
+
 /* Clear floats after the columns */
 .countdown:after {
   content: "";
@@ -415,35 +432,44 @@ Image credits: unsplash.com
 }
 
 #countdown{
-	height: 6vw;
+	height: 5vw;
 	width: 100vw;
-	background-color:#fff;
-	background: rgba(133, 133, 133,0.5);
+	background-color:rgba(51,204,204,0.2);
+	/* background: rgba(133, 133, 133,0.5); */
 	/* box-shadow: 0 0 10vw 0vw rgba(0,0,0,0.7); */
 	/* background-image: url(../img/bg-pattern-01.png); */
     display: block;
 	content: "";
 	position: absolute;
 	right:0;
-	bottom: 18vw;
+	bottom: 17vw;
 	left:0;
 }
 
 #countdown .counter {
     color: #fff;
-	float:left;						/* column that will fit 5 columns container*/
-	width: 50%;
-	padding: 0 3vw;
+	float:left;						
+	width: 50%;				/* column that will fit 2 columns container*/
     text-align: center;
     text-transform: uppercase;
-	font-family: 'OpenSansCondLight', Helvetica, Arial, sans-serif;
+	font-size:3vw;
+	font-weight:bold;
+	font-family: 'Titillium Web', Helvetica, Arial, sans-serif;  
 	white-space: nowrap;
     overflow: hidden;
+	margin: 0.5vh auto auto auto;
+	position: relative;
 }
 
-#countdown .counter div{
-	display: inline-block;
+ 
+#countdown .counter .h1{
+	color:#f4961b;
+	font-size:3vw;
+	font-weight:bold;
+	font-family: 'Titillium Web', Helvetica, Arial, sans-serif;  
 }
+
+/* Baris jadwal sholat berisi 6 kolom,  */
 
 /* Clear floats after the columns */
 .bottom-container:after {
@@ -502,8 +528,8 @@ Image credits: unsplash.com
 #jadwal .col{
 	border-bottom:0.7px solid rgba(52, 152, 219, 0.3);
 	border-radius:0.1vw;
-	float:left;						/* column that will fit 5 columns container*/
-	width:16.5%;
+	float:left;						
+	width:16.5%;               /* column that will fit 5 columns container*/
 
 }
 #jadwal .active .row-xs-5:before{
@@ -556,7 +582,7 @@ Image credits: unsplash.com
 
 
 
-
+/* right-counter : counter yang muncul seketika sudah dekat waktu sholat di tengah-tengah layar antara header dan bottom-container */
 
 #right-counter{
 	position:fixed;
@@ -681,17 +707,7 @@ Image credits: unsplash.com
 }
 
 
-.column {
-  float: left;
-  width: 33.33%;
-}
 
-/* Clear floats after the columns */
-.header:after {
-  content: "";
-  display: table;
-  clear: both;
-}
 
 
 
