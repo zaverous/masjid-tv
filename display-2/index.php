@@ -155,7 +155,7 @@ foreach ($files as $v) {
 		</div>
 	</div>
 
-	<div id="countdown">
+	<div id="countdown" style="display:none">
 		<div class="counter">
 			<span class="h1">COUNTER</span>
 			<span> : </span>
@@ -167,7 +167,7 @@ foreach ($files as $v) {
 		<div id="jadwal"></div>
 	</div>
 
-	<div id="running-text">
+	<div id="running-text" style="display:none">
 		<div class="item">
 			<!-- <div class="text"> -->
 			<marquee>
@@ -286,7 +286,7 @@ foreach ($files as $v) {
 				}
 				app.showJadwal();
 				app.displaySchedule();
-				app.countDownNextPray();
+				// app.countDownNextPray();
 				// app.showCountDownNextPray();
 				// app.runRightCountDown(app.dhuhr,'Fajr');
 
@@ -368,6 +368,7 @@ foreach ($files as $v) {
 				// console.log(app.getNextPray());
 				let waitAdzan = moment().add(app.db.timer.wait_adzan, 'minutes').format('YYYY-MM-DD HH:mm:ss');
 				let jamSekarang = moment().format('YYYY-MM-DD HH:mm:ss');
+				let limaMenitKeAdzan = moment().add(5,"minutes").format('YYYY-MM-DD HH:mm:ss');
 
 				// console.log(moment().add(5,'days').format('dddd'));
 				// console.log(waitAdzan);
@@ -390,6 +391,7 @@ foreach ($files as $v) {
 					// console.log('st iqomah '+v+' : '+stIqomah);
 					// console.log('en iqomah '+v+' : '+enIqomah.format('YYYY-MM-DD HH:mm:ss'));
 					if (waitAdzan == jadwal) app.runRightCountDown(app[k], 'Menuju ' + v); // CountDown sebelum adzan
+					else if (limaMenitKeAdzan == jadwal) app.countDownNextPray();
 					else if (jadwal == jamSekarang) app.showDisplayAdzan(v); // Display adzan
 					else if (stIqomah == jamSekarang) {
 						if (moment().format('dddd') == 'Friday' && app.db.jumat.active && k == 'dhuhr') {
@@ -404,6 +406,7 @@ foreach ($files as $v) {
 				//	app.runFullCountDown(jamSekarang, 'IQOMAH');
 				//}
 			},
+			
 			getNextPray: function() {
 				let jamSekarang = moment();
 				let nextPray = 'fajr';
@@ -441,7 +444,6 @@ foreach ($files as $v) {
 
 					$('#right-counter').slideDown();
 					$('#quote').hide();        
-					$('#countdown').hide();         // removing the countdown row so it would not cover the countdown 
 
 					app.nextPrayCount++;
 					if (app.nextPrayCount >= 30) { // 30 detik show counter
@@ -449,7 +451,6 @@ foreach ($files as $v) {
 						app.countDownTimer = false;
 						$('#right-counter').fadeOut();
 						$('#quote').fadeIn();          
-						$('#countdown').fadeIn();      // putting it back after the timer ended
 						// document.getElementById("demo").innerHTML = "EXPIRED";
 					}
 				}, 1000);
@@ -469,13 +470,12 @@ foreach ($files as $v) {
 					$('#countdown .counter>.hhiiss').html(t.hours + ":" + t.minutes + ":" + t.seconds);
 
 					$('#countdown').slideDown();
-
+					// stop the timer when the timer is less than 1 second, then remove the countdown container
 					app.nextPrayCount++;
-					if (app.nextPrayCount >= 30) { // 30 detik show counter
+					if (t.distance < 1) {
 						clearInterval(app.countDownTimer);
 						app.countDownTimer = false;
-						// $('#quote').fadeIn();          
-						// $('#countdown').fadeIn();      // putting it back after the timer ended
+						$('#countdown').fadeOut();
 						// document.getElementById("demo").innerHTML = "EXPIRED";
 					}
 				}, 1000);
@@ -560,14 +560,12 @@ foreach ($files as $v) {
 					$('#right-counter .counter>.ss').html(t.seconds + '<span>' + app.db.timeName.Seconds + '</span>');
 					$('#right-counter').slideDown();
 					$('#quote').hide();        
-					$('#countdown').hide();         // removing the countdown row so it would not cover the countdown to adzan
 
 					if (t.distance < 1) {
 						clearInterval(app.countDownTimer);
 						app.countDownTimer = false;
 						$('#quote').fadeIn();          
 						$('#right-counter').fadeOut();
-						$('#countdown').fadeIn();  // putting it back after the timer ended
 						// document.getElementById("demo").innerHTML = "EXPIRED";
 					}
 				}, 1000);

@@ -442,7 +442,7 @@ Image credits: unsplash.com
 	content: "";
 	position: absolute;
 	right:0;
-	bottom: 17vw;
+	bottom: 12vw;
 	left:0;
 }
 
@@ -488,7 +488,7 @@ Image credits: unsplash.com
 	content: "";
 	position: absolute;
 	right:0;
-	bottom: 6vw;
+	bottom: 1vw;
 	left:0;
 }
 
@@ -645,7 +645,7 @@ Image credits: unsplash.com
 
 #right-container{
 	position:fixed;
-	top:-2vw;
+	top:0;
 	right:0;
 	bottom:0;
 	left:0;
