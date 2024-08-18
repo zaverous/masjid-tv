@@ -66,12 +66,12 @@
 		</div>
 		<div class="column">	
 			<div id="info-masjid">
-				<?php
+				<!-- <?php
 					echo '
 						<div class= "header1">' . htmlentities($db['info'][0][0]) . '</div>
 						<div class= "header2">' . nl2br(htmlentities($db['info'][0][1])) . '</div>        
 					'
-				?>						
+				?>						 -->
 			</div>
 		</div>
 		<div class="column">	
@@ -82,7 +82,7 @@
 		<div id="quote">
 			<div class="carousel quote-carousel slide" data-ride="carousel" data-interval="<?= $info_timer ?>" data-pause="null">
 				<div class="carousel-inner">
-					<?php
+					<!-- <?php
 					$i = 0;
 					foreach ($db['info'] as $k => $v) {
 						if ($v[3]) {
@@ -100,7 +100,7 @@
 							$i++;
 						}
 					}
-					?>
+					?> -->
 				</div>
 			</div>
 		</div>
@@ -130,7 +130,7 @@
 		<div class="item">
 			<!-- <div class="text"> -->
 			<marquee>
-				<?php
+				<!-- <?php
 				foreach ($db['running_text'] as $k => $v) {
 					echo '<i class="fa fa-square-o" aria-hidden="true"></i> ' . htmlentities($v);
 				}
@@ -151,18 +151,23 @@
 					echo '<i class="fa fa-square-o" aria-hidden="true"></i> Default akses user : admin, password : admin';
 					echo '<i class="fa fa-square-o" aria-hidden="true"></i> Silakan mengganti password admin untuk menghilangkan tulisan ini';
 				}
-				?>
+				?> -->
 			</marquee>
 			<!-- </div> -->
 		</div>
 	</div>
-    <script type="text/javascript" src="script.js"></script>
+    <script type="text/javascript" src="index.js"></script>
 	<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/moment-with-locales.js"></script>
 	<script type="text/javascript" src="js/PrayTimes.js"></script>
 	<script type="text/javascript" src="js/jquery.marquee.js"></script>
-	
+		<!-- three dots -->
+	<ul class="dropbtn icons btn-right showLeft" onclick="window.location.href='../index.php'">
+		<li></li>
+		<li></li>
+		<li></li>
+	</ul>
 
 </body>
 

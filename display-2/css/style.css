@@ -708,6 +708,35 @@ Image credits: unsplash.com
 	white-space: nowrap;
 }
 
+.showLeft {
+	background-color: rgba(255, 255, 255, 0.3);
+	text-shadow: white !important;
+	color: black !important;
+	padding: 10px;
+}
+.icons li {
+	background: none repeat scroll 0 0 black;
+	height: 7px;
+	width: 7px;
+	line-height: 0;
+	list-style: none outside none;
+	margin-right: 15px;
+	margin-top: 3px;
+	vertical-align: bottom;
+	border-radius: 50%;
+	pointer-events: none;
+}
+.btn-right {
+  	right: 0vw;
+	bottom: 0vw
+}
+.dropbtn {
+	position: fixed;
+	color: rgba(255, 255, 255, 0.3);
+	font-size: 16px;
+	border: none;
+	cursor: pointer;
+}
 
 
 

@@ -63,12 +63,152 @@ foreach ($files as $v) {
 </head>
 
 <body>
+	<div id="preloader">
+		<div id="status">&nbsp;</div>
+	</div>
 
+
+	<div id="full-screen-clock" style="display:none"></div>
+	<div id="count-down" class="full-screen" style="display:none">
+		<div class="counter">
+			<h1>COUNTER</h1>
+			<div class="hh">00<span>JAM</span></div>
+			<div class="ii">00<span>MENIT</span></div>
+			<div class="ss">00<span>DETIK</span></div>
+		</div>
+	</div>
+	<div id="display-adzan" class="full-screen" style="display:none">
+		<div></div>
+	</div>
+	<div id="display-sholat" class="full-screen" style="display:none"></div>
+	<div id="display-khutbah" class="full-screen" style="display:none">
+		<div></div>
+	</div>
+
+	<div class="carousel fade-carousel slide" data-ride="carousel" data-interval="<?= $wallpaper_timer ?>">
+		<!-- Overlay -->
+		<div class="overlay"></div>
+		<!-- Wrapper for slides -->
+		<div class="carousel-inner"><?= $wallpaper ?></div>
+	</div>
+
+
+	<div id="header">
+		<div class="column">
+			<div id= "tanggal">
+				<?php
+					echo '
+						<div id="hari"></div>
+						<div id="tgl"></div>
+					'
+				?>
+				<div></div>
+			</div>
+		</div>
+		<div class="column">	
+			<div id="info-masjid">
+				<?php
+					echo '
+						<div class= "header1">' . htmlentities($db['info'][0][0]) . '</div>
+						<div class= "header2">' . nl2br(htmlentities($db['info'][0][1])) . '</div>        
+					'
+				?>						
+			</div>
+		</div>
+		<div class="column">	
+			<div id="jam"></div>
+		</div>
+	</div>
+	<div id="right-container">
+		<div id="quote">
+			<div class="carousel quote-carousel slide" data-ride="carousel" data-interval="<?= $info_timer ?>" data-pause="null">
+				<div class="carousel-inner">
+					<?php
+					$i = 0;
+					foreach ($db['info'] as $k => $v) {
+						if ($v[3]) {
+							echo '
+						<div class="item slides ' . ($i == 0 ? 'active' : '') . '">
+						  <div class="hero">        
+							<hgroup>
+								<div class="text1">' . htmlentities($v[0]) . '</div>        
+								<div class="text2">' . nl2br(htmlentities($v[1])) . '</div>        
+								<div class="text3">' . htmlentities($v[2]) . '</div>
+							</hgroup>
+						  </div>
+						</div>
+						';
+							$i++;
+						}
+					}
+					?>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="right-counter" style="display:none">
+		<div class="counter">
+			<h1>COUNTER</h1>
+			<div class="hh">19<span>JAM</span></div>
+			<div class="ii">25<span>MENIT</span></div>
+			<div class="ss">45<span>DETIK</span></div>
+		</div>
+	</div>
+
+	<div id="countdown" style="display:none">
+		<div class="counter">
+			<span class="h1">COUNTER</span>
+			<span> : </span>
+			<span class="hhiiss">00:00:00</span>
+		</div>	
+	</div>
+
+	<div id="bottom-container">
+		<div id="jadwal"></div>
+	</div>
+
+	<div id="running-text" style="display:none">
+		<div class="item">
+			<!-- <div class="text"> -->
+			<marquee>
+				<?php
+				foreach ($db['running_text'] as $k => $v) {
+					echo '<i class="fa fa-square-o" aria-hidden="true"></i> ' . htmlentities($v);
+				}
+				// $ip 	= gethostbyname(php_uname('n'));	// PHP < 5.3.0
+				$ip 	= gethostbyname(gethostname());		// PHP >= 5.3.0 ==> di linux keluar 127.0.0.1
+				if (PHP_OS == 'Linux') {
+					//raspi 3
+					// $command="/sbin/ifconfig wlan0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'";//raspi pake wlan0 jadi hotspot
+					// $ip = exec ($command);
+
+					//raspi 4
+					$command = "/sbin/ifconfig wlan0 | grep 'inet '| cut -d 't' -f2 | cut -d 'n' -f1 | awk '{ print $1}'"; //raspi pake wlan0 jadi hotspot
+					$ip = trim(exec($command));
+				}
+				if ($db['akses']['pass'] == 'admin') {
+					echo '<i class="fa fa-square-o" aria-hidden="true"></i> Konek ke wifi (SSID: DisplayMasjid, password: 12345678)';
+					echo '<i class="fa fa-square-o" aria-hidden="true"></i> Alamat admin http://' . $ip . '/';
+					echo '<i class="fa fa-square-o" aria-hidden="true"></i> Default akses user : admin, password : admin';
+					echo '<i class="fa fa-square-o" aria-hidden="true"></i> Silakan mengganti password admin untuk menghilangkan tulisan ini';
+				}
+				?>
+			</marquee>
+			<!-- </div> -->
+		</div>
+	</div>
+	<!-- three dots -->
+	<ul class="dropbtn icons btn-right showLeft" onclick="window.location.href='../index.php'">
+		<li></li>
+		<li></li>
+		<li></li>
+	</ul>
 	<script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
 	<script type="text/javascript" src="js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/moment-with-locales.js"></script>
 	<script type="text/javascript" src="js/PrayTimes.js"></script>
 	<script type="text/javascript" src="js/jquery.marquee.js"></script>
+	<script type="text/javascript" src="../dist/js/adminlte.min.js"></script>
 	<script>
 		//PrayTimes initialize
 		var format = '24h';
@@ -176,6 +316,9 @@ foreach ($files as $v) {
 					console.log(msg);
 				});
 				//  console.log('interval-1000');
+			},
+			toAdmin : function(){
+				window.location.replace("../index.php");
 			},
 			getJadwal: function(jadwalDate) {
 				let times = prayTimes.getTimes(jadwalDate, [lat, lng], timeZone, dst, format);
