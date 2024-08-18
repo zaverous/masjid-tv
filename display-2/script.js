@@ -1,86 +1,86 @@
-// Global variables and configurations
-var lat, lng, timeZone, dst;
-var prayTimesAdjust, prayTimesTune;
-var format = '24h';
+const fs = require('fs');
+const path = require('path');
+const moment = require('moment');
+const PrayTimes = require('praytimes');
 
+const file = '../db/database.json';
 
+if (!fs.existsSync(file)) {
+    console.log("<h1>Jalankan admin terlebih dahulu</h1>");
+    process.exit(1);
+}
 
-// Load JSON Data
-fetch('../db/database.json')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Jalankan admin terlebih dahulu");
-        }
-        return response.json();
+const json = fs.readFileSync(file, 'utf8');
+const db = JSON.parse(json);
+const showDb = { ...db };
+delete showDb['akses'];
 
-    })
-    .then(db => {
-        // Process timers
-        const info_timer = db.timer.info * 1000; // milliseconds
-        const wallpaper_timer = db.timer.wallpaper * 1000;
-        const adzan_timer = db.timer.adzan * 1000 * 60; // minutes
-        const sholat_timer = db.timer.sholat * 1000 * 60;
+const info_timer = db['timer']['info'] * 1000; //detik
+const wallpaper_timer = db['timer']['wallpaper'] * 1000;
+const adzan_timer = db['timer']['adzan'] * 1000 * 60; //menit
+// const iqomah_timer = db['timer']['iqomah'] * 1000 * 60;
+const sholat_timer = db['timer']['sholat'] * 1000 * 60;
 
-        // Optional timers
-        const khutbah_jumat = db.jumat.duration * 1000 * 60;
-        const sholat_tarawih = db.tarawih.duration * 1000 * 60;
+//optional
+const khutbah_jumat = db['jumat']['duration'] * 1000 * 60;
+const sholat_tarawih = db['tarawih']['duration'] * 1000 * 60;
 
-        // Handle logos
-        const dirLogo = 'logo/';
-        fetch(dirLogo) // assuming you're serving files through an API or other mechanism
-            .then(response => response.json()) // you'd need to handle file listing in another way
-            .then(files => {
-                const filesLogo = files.filter(file => !['.', '..', 'Thumbs.db'].includes(file));
-                const logo = filesLogo[0];
-                console.log("Logo:", logo);
-            });
-    })
-    .then(data => {
-                    // Set global variables
-            lat = data.setting.latitude;
-            lng = data.setting.longitude;
-            timeZone = data.setting.timeZone;
-            dst = data.setting.dst;
+//Logo
+// nge trik ==> kalo replace file, di display logo yang lama masih kesimpen di cache ==> solusi ganti logo ganti nama file
+const dirLogo = 'logo/';
+const filesLogo = fs.readdirSync(dirLogo).filter(file => file !== '.' && file !== '..' && file !== 'Thumbs.db');
+const logo = filesLogo[0];
 
-            // Set pray times adjustments and tuning
-            if (data.prayTimesMethod === '0') {
-                prayTimesAdjust = data.prayTimesAdjust;
-                prayTimes.adjust(prayTimesAdjust);
-            } else {
-                prayTimes.setMethod(data.prayTimesMethod);
-            }
+const dir = 'wallpaper/';
+const files = fs.readdirSync(dir).filter(file => file !== '.' && file !== '..' && file !== 'Thumbs.db');
+let wallpaper = '';
+let i = 0;
+files.forEach(v => {
+    const active = i === 0 ? 'active' : '';
+    wallpaper += `<div class="item slides ${active}"><div style="background-image: url(wallpaper/${v});"></div></div>`;
+    i++;
+});
 
-            prayTimesTune = data.prayTimesTune;
-            if (Object.keys(prayTimesTune).length > 0) {
-                prayTimes.tune(prayTimesTune);
-            }
+// PrayTimes initialize
+const format = '24h';
+const lat = db['setting']['latitude'];
+const lng = db['setting']['longitude'];
+const timeZone = db['setting']['timeZone'];
+const dst = db['setting']['dst'];
 
-            // Initialize app
-            app.initialize(data);
-    })
-    .catch(error => {
-        document.body.innerHTML = `<h1>${error.message}</h1>`;
-    });
+const prayTimesAdjust = {};
+if (db['prayTimesMethod'] === '0') {
+    for (const [k, v] of Object.entries(db['prayTimesAdjust'])) {
+        if (v !== '') prayTimesAdjust[k] = v;
+    }
+    PrayTimes.adjust(prayTimesAdjust);
+} else {
+    PrayTimes.setMethod(db['prayTimesMethod']);
+}
 
-//PrayTimes initialize
-var format = '24h';
+const prayTimesTune = {};
+for (const [k, v] of Object.entries(db['prayTimesTune'])) {
+    if (v !== '0') prayTimesTune[k] = v;
+}
+if (Object.keys(prayTimesTune).length > 0) {
+    PrayTimes.tune(prayTimesTune);
+}
 
-//Baris ini ke bawah jika inget nanti pindah ke file terpisah biar rapi......
-var app = {
-    db : null,
+const app = {
+    db: JSON.parse(JSON.stringify(showDb)),
     cekDb: false,
     tglHariIni: '',
     tglBesok: '',
     jadwalHariIni: {},
     jadwalBesok: {},
     timer: false,
-    // waitAdzanTimer	: false,	// Display countdown sebelum adzan
+    // waitAdzanTimer: false, // Display countdown sebelum adzan
     adzanTimer: false, // Display adzan
     countDownTimer: false, // Display countdown iqomah
     sholatTimer: false, // Display sholat
     khutbahTimer: false, // Display khutbah
     nextPrayCount: 0, // start next pray count-down
-    // nextPrayTimer	: false,	// Display countdown ke sholat selanjutnya
+    // nextPrayTimer: false, // Display countdown ke sholat selanjutnya
     fajr: '',
     sunrise: '',
     dhuhr: '',
@@ -90,19 +90,19 @@ var app = {
     audio: new Audio('img/beep.mp3'),
     initialize: function() {
         app.timer = setInterval(function() {
-            app.cekPerDetik()
+            app.cekPerDetik();
         }, 1000);
         $('#preloader').delay(350).fadeOut('slow');
         // console.log(app.db);
-        // let testTime	= moment().add(8,'seconds');
-        // app.runRightCountDown(testTime,'Menuju Syuruq');
-        // app.runFullCountDown(testTime,'iqomah',true);
-        // app.runFullCountDown(testTime,'TEST COUNTER',false);
+        // let testTime = moment().add(8, 'seconds');
+        // app.runRightCountDown(testTime, 'Menuju Syuruq');
+        // app.runFullCountDown(testTime, 'iqomah', true);
+        // app.runFullCountDown(testTime, 'TEST COUNTER', false);
         // app.showDisplayAdzan('sunrise');
         // app.showDisplayKhutbah();
     },
     cekPerDetik: function() {
-        if (!app.tglHariIni || moment().format('YYYY-MM-DD') != moment(app.tglHariIni).format('YYYY-MM-DD')) {
+        if (!app.tglHariIni || moment().format('YYYY-MM-DD') !== moment(app.tglHariIni).format('YYYY-MM-DD')) {
             app.tglHariIni = moment();
             app.tglBesok = moment().add(1, 'days');
             app.jadwalHariIni = app.getJadwal(moment(app.tglHariIni).toDate());
@@ -118,7 +118,7 @@ var app = {
         app.displaySchedule();
         // app.countDownNextPray();
         // app.showCountDownNextPray();
-        // app.runRightCountDown(app.dhuhr,'Fajr');
+        // app.runRightCountDown(app.dhuhr, 'Fajr');
 
         $.ajax({
             type: "POST",
@@ -129,7 +129,7 @@ var app = {
             }
         }).done(function(dt) {
             // console.log(dt.data);
-            if (app.cekDb == false) {
+            if (app.cekDb === false) {
                 app.cekDb = dt.data;
             } else if (app.cekDb !== dt.data) {
                 // reload page
@@ -138,16 +138,17 @@ var app = {
         }).fail(function(msg) {
             console.log(msg);
         });
+
         //  console.log('interval-1000');
     },
     getJadwal: function(jadwalDate) {
-        let times = prayTimes.getTimes(jadwalDate, [lat, lng], timeZone, dst, format);
+        let times = PrayTimes.getTimes(jadwalDate, [lat, lng], timeZone, dst, format);
         //console.log(times)
         return times;
     },
     showJadwal: function() {
         // console.log(app.db.prayName)
-        let jamSekarang = moment()
+        let jamSekarang = moment();
         //console.log(jamSekarang)
 
         // let jamSekarang = moment();
@@ -181,45 +182,46 @@ var app = {
         }
         $.each(app.db.prayName, function(k, v) {
             // console.log(jamDelay.format('YYYY-MM-DD HH:mm:ss'));
-            // console.log(app.db.PrayName)
-            //console.log({ k, v, app })
+            // console.log(app.db.PrayName);
+            //console.log({ k, v, app });
             let css = '';
             if (k == 'isha' && jamDelay < app.isha && jamDelay > app.maghrib) css = 'active';
             else if (k == 'maghrib' && jamDelay < app.maghrib && jamDelay > app.asr) css = 'active';
             else if (k == 'asr' && jamDelay < app.asr && jamDelay > app.dhuhr) css = 'active';
             else if (k == 'dhuhr' && jamDelay < app.dhuhr && jamDelay > app.fajr) css = 'active';
             else if (k == 'sunrise' && jamDelay < app.sunrise && jamDelay > app.sunrise) css = 'active';
-            else if (k == 'fajr' && (jamDelay < app.fajr || jamDelay > app.isha)) css = 'active'; //diatas isha dan sebelum subuh (beda hari)
-            jadwal += '<div class=" col ' + css + '"><div class="row-xs-5">' + v + '</div><div class="row-xs-7">' + jadwalDipake[k] + jadwalPlusIcon + '</div></div>';
+            else if (k == 'fajr' && (jamDelay < app.fajr || jamDelay > app.isha)) css = 'active'; //diatas isha dan sebelum subuh (beda hari);
+            jadwal += `<div class=" col ${css}"><div class="row-xs-5">${v}</div><div class="row-xs-7">${jadwalDipake[k]}${jadwalPlusIcon}</div></div>`;
         });
+
         $('#jadwal').html(jadwal);
     },
     displaySchedule: function() {
-        // console.log(app.getNextPray());
+        // console.log(app.getNextPray);
         let waitAdzan = moment().add(app.db.timer.wait_adzan, 'minutes').format('YYYY-MM-DD HH:mm:ss');
         let jamSekarang = moment().format('YYYY-MM-DD HH:mm:ss');
-        let limaMenitKeAdzan = moment().add(5,"minutes").format('YYYY-MM-DD HH:mm:ss');
+        let limaMenitKeAdzan = moment().add(5, "minutes").format('YYYY-MM-DD HH:mm:ss');
 
-        // console.log(moment().add(5,'days').format('dddd'));
+        // console.log(moment().add(5, 'days').format('dddd'));
         // console.log(waitAdzan);
         // console.log(app.dhuhr.format('YYYY-MM-DD HH:mm:ss'));
 
         $.each(app.db.prayName, function(k, v) {
-            //Normal 	: waitAdzanCountDown-adzan-iqomah-sholat-nextPrayCountDown
-            //jumat 	: waitAdzanCountDown-adzan-khutbah-sholat-nextPrayCountDown
-            //tarawih 	: waitAdzanCountDown-adzan-iqomah-sholat-isya-Tarawih(hanya durasi tarawih)-nextPrayCountDown
+            //Normal : waitAdzanCountDown-adzan-iqomah-sholat-nextPrayCountDown
+            //jumat : waitAdzanCountDown-adzan-khutbah-sholat-nextPrayCountDown
+            //tarawih : waitAdzanCountDown-adzan-iqomah-sholat-isya-Tarawih(hanya durasi tarawih)-nextPrayCountDown
 
-            let t = moment(app[k]); //bikin variable baru t ==> jika ditulis let t	= app[k]; ==> jika di tambah / kurang, variable app[k] ikut berubah
+            let t = moment(app[k]); //bikin variable baru t ==> jika ditulis let t = app[k]; ==> jika di tambah / kurang, variable app[k] ikut berubah
             let jadwal = t.format('YYYY-MM-DD HH:mm:ss');
             let stIqomah = t.add(app.db.timer.adzan, 'minutes').format('YYYY-MM-DD HH:mm:ss');
-            let enIqomah = moment(stIqomah, 'YYYY-MM-DD HH:mm:ss').add(app.db.iqomah[k], 'minutes')
+            let enIqomah = moment(stIqomah, 'YYYY-MM-DD HH:mm:ss').add(app.db.iqomah[k], 'minutes');
 
-            //console.log('jadwal-------------- '+jadwal);
-            //console.log('Now-------------- '+jamSekarang);
-            // console.log('time '+v+' : '+jadwal);
-            // console.log('waitAdzan '+v+' : '+waitAdzan);
-            // console.log('st iqomah '+v+' : '+stIqomah);
-            // console.log('en iqomah '+v+' : '+enIqomah.format('YYYY-MM-DD HH:mm:ss'));
+            //console.log('jadwal-------------- ' + jadwal);
+            //console.log('Now-------------- ' + jamSekarang);
+            // console.log('time ' + v + ' : ' + jadwal);
+            // console.log('waitAdzan ' + v + ' : ' + waitAdzan);
+            // console.log('st iqomah ' + v + ' : ' + stIqomah);
+            // console.log('en iqomah ' + v + ' : ' + enIqomah.format('YYYY-MM-DD HH:mm:ss'));
             if (waitAdzan == jadwal) app.runRightCountDown(app[k], 'Menuju ' + v); // CountDown sebelum adzan
             else if (limaMenitKeAdzan == jadwal) app.countDownNextPray();
             else if (jadwal == jamSekarang) app.showDisplayAdzan(v); // Display adzan
@@ -230,13 +232,13 @@ var app = {
                 } else
                     app.runFullCountDown(enIqomah, 'IQOMAH', true); // CountDown iqomah
             }
+
+            //let jamSekarang = moment().add(5, 'minutes');
+            //if (!app.countDownTimer) {
+            //    app.runFullCountDown(jamSekarang, 'IQOMAH');
+            //}
         });
-        //let jamSekarang = moment().add(5, 'minutes');
-        //if (!app.countDownTimer) {
-        //	app.runFullCountDown(jamSekarang, 'IQOMAH');
-        //}
     },
-    
     getNextPray: function() {
         let jamSekarang = moment();
         let nextPray = 'fajr';
@@ -273,16 +275,14 @@ var app = {
             $('#right-counter .counter>.ss').html(t.seconds + '<span>' + app.db.timeName.Seconds + '</span>');
 
             $('#right-counter').slideDown();
-            $('#quote').hide();        
-            $('#countdown').hide();         // removing the countdown row so it would not cover the countdown 
+            $('#quote').hide();
 
             app.nextPrayCount++;
             if (app.nextPrayCount >= 30) { // 30 detik show counter
                 clearInterval(app.countDownTimer);
                 app.countDownTimer = false;
                 $('#right-counter').fadeOut();
-                $('#quote').fadeIn();          
-                $('#countdown').fadeIn();      // putting it back after the timer ended
+                $('#quote').fadeIn();
                 // document.getElementById("demo").innerHTML = "EXPIRED";
             }
         }, 1000);
@@ -295,29 +295,23 @@ var app = {
         //console.log(moment(nextPray['date']).format('YYYY-MM-DD HH:mm:ss'));
         app.countDownTimer = setInterval(function() {
             let t = app.countDownCalculate(nextPray.date);
-            $('#countdown .counter>.h1').html(app.db.prayName[nextPray.pray] );
+            $('#countdown .counter>.h1').html(app.db.prayName[nextPray.pray]);
             // $('#countdown .counter>.hh').html(t.hours + '<span>' + app.db.timeName.Hours + '</span>');
             // $('#countdown .counter>.ii').html(t.minutes + '<span>' + app.db.timeName.Minutes + '</span>');
             // $('#countdown .counter>.ss').html(t.seconds + '<span>' + app.db.timeName.Seconds + '</span>');
             $('#countdown .counter>.hhiiss').html(t.hours + ":" + t.minutes + ":" + t.seconds);
 
             $('#countdown').slideDown();
-
+            // stop the timer when the timer is less than 1 second, then remove the countdown container
             app.nextPrayCount++;
-            if (app.nextPrayCount >= 30) { // 30 detik show counter
+            if (t.distance < 1) {
                 clearInterval(app.countDownTimer);
                 app.countDownTimer = false;
-                // $('#countdown').fadeOut();      // putting it back after the timer ended
+                $('#countdown').fadeOut();
                 // document.getElementById("demo").innerHTML = "EXPIRED";
             }
-            if (t.distance < 1) {
-                $('#countdown').fadeOut();      // putting it back after the timer ended
-            }
-            
-            
         }, 1000);
     },
-    
     showDisplayAdzan: function(prayName) {
         if (!app.adzanTimer) {
             prayName = (prayName == 'sunrise') ? 'Waktu Syuruq' : prayName;
@@ -371,8 +365,9 @@ var app = {
                 }).catch((e) => {
                     console.log('Agar beep bunyi ==> permission chrome : sound harus enable');
                     console.log(e);
+
+                    // audio.play();
                 });
-                // audio.play();
             }
             if (t.distance < 1) {
                 clearInterval(app.countDownTimer);
@@ -396,15 +391,13 @@ var app = {
             $('#right-counter .counter>.ii').html(t.minutes + '<span>' + app.db.timeName.Minutes + '</span>');
             $('#right-counter .counter>.ss').html(t.seconds + '<span>' + app.db.timeName.Seconds + '</span>');
             $('#right-counter').slideDown();
-            $('#quote').hide();        
-            $('#countdown').hide();         // removing the countdown row so it would not cover the countdown to adzan
+            $('#quote').hide();
 
             if (t.distance < 1) {
                 clearInterval(app.countDownTimer);
                 app.countDownTimer = false;
-                $('#quote').fadeIn();          
+                $('#quote').fadeIn();
                 $('#right-counter').fadeOut();
-                $('#countdown').fadeIn();  // putting it back after the timer ended
                 // document.getElementById("demo").innerHTML = "EXPIRED";
             }
         }, 1000);
@@ -430,5 +423,7 @@ var app = {
             'seconds': seconds
         };
     }
-} ;
-document.addEventListener('DOMContentLoaded', loadInitialData);
+};
+
+app.initialize();
+
