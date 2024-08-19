@@ -1,62 +1,38 @@
-import { Session, Feedback } from "./session.js";
-document.addEventListener('DOMContentLoaded', function() {
-    // Check if user is already logged in
-    if (Session.getSessionItem("user_id")) {
-        window.location.href = "index.html";
+$(document).ready(function () {
+    // Check if there's an active session
+    if (localStorage.getItem('loggedIn') === 'true') {
+        // If already logged in, redirect to index.html
+        window.location.href = 'index.html';
     }
 
-    // Fetch and display masjid name
-    fetch('db/database.json')
-        .then(response => response.json())
-        .then(data => {
-            const name = data.setting.nama;
-            document.getElementById('masjidName').textContent = name;
-        })
-        .catch(error => console.error('Error:', error));
+    // Load the database.json file using jQuery's AJAX method
+    $.getJSON('db/database.json', function(data) {
+        // Optionally, set the masjid name dynamically from the JSON data
+        $('#masjidName').text(data.setting.nama);
 
-    // Handle form submission
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
-        event.preventDefault();
+        // When the form is submitted
+        $('#loginForm').on('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission
+            
+            // Get the input values
+            var username = $('input[name="user"]').val();
+            var password = $('input[name="pass"]').val();
 
-        const btn = this.querySelector('button.btn-primary');
-        const btnText = btn.innerHTML;
-        btn.innerHTML = '<i class="fa fa-spinner fa-pulse"></i> loading...';
-        btn.disabled = true;
+            // Access the stored credentials from the JSON data
+            var storedUser = data.akses.user;
+            var storedPass = data.akses.pass;
 
-        const formData = new FormData(this);
-        const data = {
-            id: 'login',
-            dt: {
-                user: formData.get('user'),
-                pass: formData.get('pass')
-            }
-        };
-
-        fetch('proses.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(dt => {
-            if (dt.registered) {
-                Session.setSessionItem("user_id", dt.user); // Assuming the response includes a user_id
-                window.location.reload();
+            // Check if the input credentials match the stored credentials
+            if (username === storedUser && password === storedPass) {
+                // If they match, set the session in localStorage
+                localStorage.setItem('loggedIn', 'true');
+                
+                // Redirect to index.html instead of reloading
+                window.location.href = 'index.html';
             } else {
-                alert(dt.data);
-                document.getElementById('pass').value = '';
-                document.getElementById('pass').focus();
+                // If they don't match, show an error message
+                alert('Invalid username or password. Please try again.');
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert("An error occurred. Please try again.");
-        })
-        .finally(() => {
-            btn.innerHTML = btnText;
-            btn.disabled = false;
         });
     });
 });

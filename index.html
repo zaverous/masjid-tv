@@ -1,167 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Display|Masjid|Admin</title>
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-  <link rel="icon" type="image/png" href="icon.png"/>
-  <link rel="stylesheet" href="dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="dist/css/font-awesome.min.css">
-  <link rel="stylesheet" href="dist/css/AdminLTE.min.css">
-  <link rel="stylesheet" href="dist/css/_all-skins.min.css">
-  <link rel="stylesheet" href="dist/css/bootstrap-datetimepicker.css">
-  <link rel="stylesheet" href="dist/css/datatables.min.css">
-  <link rel="stylesheet" href="dist/css/buttons.dataTables.min.css">
-	<style>
-		button.info-box{
-			padding:0;
-			border:none;
-			border-radius:10px;
-			overflow:hidden;
-		}
-		
-		button.info-box:active{
-			box-shadow: inset 0 0 100px #000000
-		}
-		.nav-tabs-custom .tab-content h4{
-			background-color:#00a65a;
-			color:#FFF; 
-			font-size: 18px; 
-			padding: 7px 10px; 
-			margin: 0;
-			font-size:14px;
-			text-transform: uppercase;
-		}
-		.section-wallpaper .small-box{
-			background-position: center center;
-			background-size: cover;
-			background-repeat: no-repeat;
-			margin-bottom:10px;
-		}
-		.section-wallpaper .small-box .inner{
-			min-height:100px;
-		}
-		.section-wallpaper .small-box>.small-box-footer{
-			background: rgba(0, 0, 0, 0.3);
-		}
-		#container{
-			padding-bottom:20px;
-		}
-		form .box .input,
-		form .box .input-group{
-			margin-bottom:1px;
-		}
-		form .box .input-group>.input-group-addon:first-child{
-			background-color:#00a65a;
-			border-color:#00a65a;
-			color:#FFF;
-			min-width:100px;
-			text-align: right;
-		}
-		.dataTable thead{
-			background:#00a65a;
-			color: #fff;
-		}
-		.table-responsive{
-			border:none !important;
-		}
-		.sidebar-menu>li>a{
-			cursor:pointer;
-		}
-		.date-navigation .btn{
-			border-radius: 20px;
-			height: 30px;
-			font-size:12px;
-			padding: 2px 15px;
-			margin: 15px;
-			
-		}
-		div.dataTables_wrapper div.dataTables_filter label{
-			margin-bottom:0;
-		}
-		table.dataTable{
-			margin-top: 0 !important;
-		}
-		.no-margin>tbody>tr>td,
-		.no-margin>thead>tr>th{
-			text-align:center;
-			padding:0 !important;
-		}
-		.no-margin>thead>tr>th{
-			padding:3px 0 !important;
-		}
-		.no-margin>tbody>tr>td{
-			margin:0;
-			padding: 2px;
-		}
-		.today{
-			background:#87e7ff  !important;
-			font-weight:bold;
-		}
-	</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Interface</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
-<body class="hold-transition skin-green sidebar-mini">
-<div class="wrapper">
-  <header class="main-header">
-    <a href="" class="logo" onclick="location.reload()">
-      <span class="logo-mini">DM</span>
-      <span class="logo-lg"><b>Display</b>Masjid</span>
-    </a>
-    <nav class="navbar navbar-static-top">
-      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
-        <span class="sr-only">Toggle navigation</span>
-      </a>
-      <div class="navbar-custom-menu">
-        <ul class="nav navbar-nav">
-          <li>
-            <a><?=$name?> - Admin display</a>
-          </li>
-        </ul>
-      </div>
-    </nav>
-  </header>
-  <!-- Left side column. contains the logo and sidebar -->
-  <aside class="main-sidebar">
-    <!-- sidebar: style can be found in sidebar.less -->
-    <section class="sidebar">
-      <!-- sidebar menu: : style can be found in sidebar.less -->
-      <ul class="sidebar-menu" data-widget="tree">
-        <li class="header">NAVIGATION</li>
-		<li class="active"><a data-target="info"><i class="fa fa-comment"></i> <span>Informasi</span></a></li>
-		<li><a data-target="running_text"><i class="fa fa-text-width"></i> <span>Running text</span></a></li>
-		<li><a data-target="wallpaper"><i class="fa fa-television"></i> <span>Wallpaper</span></a></li>
-		<li><a data-target="timer"><i class="fa fa-clock-o"></i> <span>Timer</span></a></li>
-		<li><a data-target="jadwal"><i class="fa fa-calendar"></i> <span>Setting Jadwal</span></a></li>
-		<li><a data-target="simulasi"><i class="fa fa-history"></i> <span>Simulasi Jadwal</span></a></li>
-		<li><a data-target="pengaturan"><i class="fa fa-cogs"></i> <span>Pengaturan</span></a></li>
-		<li><a data-target="logout"><i class="fa fa-sign-out"></i> <span>Logout</span></a></li>
-      </ul>
-    </section>
-    <!-- /.sidebar -->
-  </aside>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="list-group" id="menu">
+                    <!-- Dynamic Menu Will Be Injected Here -->
+                </div>
+            <button id="logoutBtn">Logout</button>
+            </div>
+            <div class="col-md-9">
+                <div id="form-container">
+                    <!-- Dynamic Form Will Be Injected Here -->
+                </div>
+            </div>
+        </div>
+    </div>
 
-  <!-- Content Wrapper. Contains page content -->
-	<div id='container' class="content-wrapper">
-	</div>
-	<footer class="main-footer">
-		<div class="pull-right">
-		  <b>Version</b> 1.0.0 (Feb 2020)
-		</div>
-		<strong>Display|Masjid</strong> Aplication
-	</footer>
-	<!-- <script src="cordova.js"></script> -->
-	<script src="dist/js/jquery.min.js"></script>
-	<script src="dist/js/bootstrap.min.js"></script>
-	<script src="dist/js/swipe.js"></script>
-	<script src="dist/js/adminlte.min.js"></script>
-	<script src="dist/js/moment-with-locales.js"></script>
-	<script src="dist/js/bootstrap-datetimepicker.min.js"></script>
-	<script src="dist/js/datatables.min.js"></script>
-	<script src="dist/js/dataTables.buttons.min.js"></script>
-	<script src="dist/js/buttons.html5.min.js"></script>
-	<script src="display/js/PrayTimes.js"></script>
-	<script src="dist/js/fn.js"></script>
-	<script src="index.js"></script>
+
+    <script src="index.js"></script>
+    <script>
+        // Check if the user is logged in
+        if (localStorage.getItem('loggedIn') !== 'true') {
+            // If not logged in, redirect to login.html
+            window.location.href = 'login.html';
+        } else {
+            // Load the protected content here if needed
+            // You can use the same $.getJSON() method to load the database.json
+        }
+    </script>
+    <script>
+        $('#logoutBtn').on('click', function () {
+            // Clear the session
+            localStorage.removeItem('loggedIn');
+            // Redirect to login.html
+            window.location.href = 'login.html';
+        });
+    </script>
+
 </body>
 </html>
